@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: secure-uploader-ingress
+  annotations:
+    # Use the NGINX Ingress Controller
+    kubernetes.io/ingress.class: "nginx"
+    # Optional: For Let's Encrypt SSL, you'd add cert-manager annotations here
+    # cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  rules:
+  - host: "rkivedocs.com" # IMPORTANT: Replace with your public domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: secure-uploader-service
+            port:
+              number: 80
+  # Optional: TLS configuration for HTTPS
+  # tls:
+  # - hosts:
+  #   - "your-domain.com"
+  #   secretName: your-domain-tls-secret # Cert-manager creates this automatically

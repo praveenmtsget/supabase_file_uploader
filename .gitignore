@@ -10,3 +10,4 @@ coverage/
 # Ignore environment configuration files
 .env
 .env.local
+digitalocean.txt

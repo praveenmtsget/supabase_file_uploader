@@ -36,7 +36,7 @@ spec:
       # --- MAIN CONTAINER SECTION ---
       containers:
       - name: web
-        image: your-username/your-imagename:latest
+        image: praveenmtsget/rkivedocs:latest
         ports:
         - containerPort: 80
         volumeMounts:
