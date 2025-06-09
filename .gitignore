@@ -1,0 +1,12 @@
+# .gitignore
+
+# ... other ignored files
+env.js
+node_modules/
+dist/
+coverage/
+.vscode/
+.vscode-test/
+# Ignore environment configuration files
+.env
+.env.local

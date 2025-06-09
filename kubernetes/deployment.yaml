@@ -1,0 +1,50 @@
+# kubernetes/deployment.yaml (Updated)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-uploader-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: secure-uploader
+  template:
+    metadata:
+      labels:
+        app: secure-uploader
+    spec:
+      # --- INIT CONTAINER SECTION ---
+      # This container runs first to prepare the environment.
+      initContainers:
+      - name: setup-env
+        image: busybox:1.35 # A tiny image with shell tools
+        command: ['sh', '-c']
+        # This command creates the env.js file using values from the ConfigMap
+        args:
+          - >
+            echo "const SUPABASE_URL = '${SUPABASE_URL}';" > /usr/share/nginx/html/env.js &&
+            echo "const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';" >> /usr/share/nginx/html/env.js
+        envFrom:
+          # Load all key-value pairs from the 'supabase-config' ConfigMap as environment variables
+          - configMapRef:
+              name: supabase-config
+        volumeMounts:
+        - name: web-root
+          mountPath: /usr/share/nginx/html
+      
+      # --- MAIN CONTAINER SECTION ---
+      containers:
+      - name: web
+        image: your-username/your-imagename:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: web-root
+          mountPath: /usr/share/nginx/html
+
+      # --- VOLUME SECTION ---
+      # A shared volume that both the initContainer and the main container can access.
+      volumes:
+      - name: web-root
+        emptyDir: {} # An empty directory that is created when the Pod is assigned to a node.
