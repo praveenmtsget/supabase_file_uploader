@@ -213,7 +213,7 @@ IGNORE_WHEN_COPYING_END
 Build and push the image to a container registry (e.g., Docker Hub, GitHub Container Registry).
 
 # Replace 'your-username' and 'your-imagename'
-DOCKER_IMAGE="your-username/your-imagename:latest"
+DOCKER_IMAGE="praveenmtsget/rkivedocs:beta-1"
 
 # Build the image
 docker build -t $DOCKER_IMAGE .
