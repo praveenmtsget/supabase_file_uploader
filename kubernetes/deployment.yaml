@@ -15,7 +15,7 @@ spec:
       initContainers:
       - name: setup-env
         # We need the real image here to access the /app directory
-        image: praveenmtsget/rkivedocs:beta-8075003 # <-- Use your main app image
+        image: praveenmtsget/file-uploader-app:latest # <-- Use your main app image
         command: ['sh', '-c']
         args:
           - >
@@ -33,7 +33,7 @@ spec:
       
       containers:
       - name: web
-        image: praveenmtsget/rkivedocs:beta-8075003
+        image: praveenmtsget/file-uploader-app:latest
         ports:
         - containerPort: 80
         volumeMounts:
