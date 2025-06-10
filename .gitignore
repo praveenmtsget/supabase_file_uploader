@@ -11,3 +11,4 @@ coverage/
 .env
 .env.local
 digitalocean.txt
+rkive-docs-dev1-k8s-kubeconfig.yaml

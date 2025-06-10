@@ -1,5 +1,3 @@
-# kubernetes/deployment.yaml (Updated)
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,37 +12,34 @@ spec:
       labels:
         app: secure-uploader
     spec:
-      # --- INIT CONTAINER SECTION ---
-      # This container runs first to prepare the environment.
       initContainers:
       - name: setup-env
-        image: busybox:1.35 # A tiny image with shell tools
+        # We need the real image here to access the /app directory
+        image: your-username/your-imagename:latest # <-- Use your main app image
         command: ['sh', '-c']
-        # This command creates the env.js file using values from the ConfigMap
         args:
           - >
+            # Step 1: Copy static files from the staging area (/app) to the shared volume
+            cp -r /app/. /usr/share/nginx/html/ &&
+            # Step 2: Create the env.js file in the shared volume
             echo "const SUPABASE_URL = '${SUPABASE_URL}';" > /usr/share/nginx/html/env.js &&
             echo "const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';" >> /usr/share/nginx/html/env.js
         envFrom:
-          # Load all key-value pairs from the 'supabase-config' ConfigMap as environment variables
           - configMapRef:
               name: supabase-config
         volumeMounts:
         - name: web-root
           mountPath: /usr/share/nginx/html
       
-      # --- MAIN CONTAINER SECTION ---
       containers:
       - name: web
-        image: praveenmtsget/rkivedocs:latest
+        image: praveenmtsget/rkivedocs:beta-1c7ec8e
         ports:
         - containerPort: 80
         volumeMounts:
         - name: web-root
           mountPath: /usr/share/nginx/html
 
-      # --- VOLUME SECTION ---
-      # A shared volume that both the initContainer and the main container can access.
       volumes:
       - name: web-root
-        emptyDir: {} # An empty directory that is created when the Pod is assigned to a node.
+        emptyDir: {}

@@ -14,5 +14,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
     - name: Build the Docker image
-      run: set +x build_image.sh && ./build_image.sh
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/file-uploader-app:latest .
+
+    - name: Push the Docker image
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/file-uploader-app:latest
