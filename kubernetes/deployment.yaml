@@ -15,7 +15,7 @@ spec:
       initContainers:
       - name: setup-env
         # We need the real image here to access the /app directory
-        image: your-username/your-imagename:latest # <-- Use your main app image
+        image: praveenmtsget/rkivedocs:latest # <-- Use your main app image
         command: ['sh', '-c']
         args:
           - >
