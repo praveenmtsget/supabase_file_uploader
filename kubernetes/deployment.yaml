@@ -13,20 +13,21 @@ spec:
         app: secure-uploader
     spec:
       initContainers:
-      - name: setup-env
-        # We need the real image here to access the /app directory
-        image: praveenmtsget/file-uploader-app:beta-1749554793 # <-- Use your main app image
+        - name: setup-env
+        image: praveenmtsget/file-uploader-app:beta-1749554793
         command: ['sh', '-c']
         args:
           - >
-            # Step 1: Copy static files from the staging area (/app) to the shared volume
-            cp -r /app/. /usr/share/nginx/html/ &&
-            # Step 2: Create the env.js file in the shared volume
-            echo "const SUPABASE_URL = '${SUPABASE_URL}';" > /usr/share/nginx/html/env.js &&
-            echo "const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';" >> /usr/share/nginx/html/env.js
+          echo "Starting initContainer: copying static files..." &&
+          cp -r /app/. /usr/share/nginx/html/ &&
+          echo "Static files copied." &&
+          echo "Creating env.js file..." &&
+          echo "const SUPABASE_URL = '${SUPABASE_URL}';" > /usr/share/nginx/html/env.js &&
+          echo "const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';" >> /usr/share/nginx/html/env.js &&
+          echo "env.js file created with SUPABASE_URL and SUPABASE_ANON_KEY."
         envFrom:
           - configMapRef:
-              name: supabase-config
+            name: supabase-config
         volumeMounts:
         - name: web-root
           mountPath: /usr/share/nginx/html
