@@ -14,23 +14,23 @@ spec:
     spec:
       initContainers:
         - name: setup-env
-        image: praveenmtsget/file-uploader-app:beta-1749559567
-        command: ['sh', '-c']
-        args:
-          - >
-          echo "Starting initContainer: copying static files..." &&
-          cp -r /app/. /usr/share/nginx/html/ &&
-          echo "Static files copied." &&
-          echo "Creating env.js file..." &&
-          echo "const SUPABASE_URL = '${SUPABASE_URL}';" > /usr/share/nginx/html/env.js &&
-          echo "const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';" >> /usr/share/nginx/html/env.js &&
-          echo "env.js file created with SUPABASE_URL and SUPABASE_ANON_KEY."
-        envFrom:
-          - configMapRef:
-            name: supabase-config
-        volumeMounts:
-        - name: web-root
-          mountPath: /usr/share/nginx/html
+          image: praveenmtsget/file-uploader-app:beta-1749559567
+          command: ['sh', '-c']
+          args:
+            - >
+              echo "Starting initContainer: copying static files..." &&
+              cp -r /app/. /usr/share/nginx/html/ &&
+              echo "Static files copied." &&
+              echo "Creating env.js file..." &&
+              echo "const SUPABASE_URL = '${SUPABASE_URL}';" > /usr/share/nginx/html/env.js &&
+              echo "const SUPABASE_ANON_KEY = '${SUPABASE_ANON_KEY}';" >> /usr/share/nginx/html/env.js &&
+              echo "env.js file created with SUPABASE_URL and SUPABASE_ANON_KEY."
+          envFrom:
+            - configMapRef:
+                name: supabase-config
+          volumeMounts:
+            - name: web-root
+              mountPath: /usr/share/nginx/html
       
       containers:
       - name: web
