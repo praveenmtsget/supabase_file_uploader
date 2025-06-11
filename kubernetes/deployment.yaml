@@ -14,7 +14,7 @@ spec:
     spec:
       initContainers:
         - name: setup-env
-        image: praveenmtsget/file-uploader-app:beta-1749554793
+        image: praveenmtsget/file-uploader-app:beta-1749559567
         command: ['sh', '-c']
         args:
           - >
@@ -34,7 +34,7 @@ spec:
       
       containers:
       - name: web
-        image: praveenmtsget/file-uploader-app:beta-1749554793
+        image: praveenmtsget/file-uploader-app:beta-1749559567
         ports:
         - containerPort: 80
         volumeMounts:
