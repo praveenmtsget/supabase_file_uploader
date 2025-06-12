@@ -36,3 +36,34 @@ jobs:
 
     - name: Push the Docker image (latest)
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/file-uploader-app:latest
+
+  deploy-to-k8s:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Wait for approval before deployment
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          event-type: manual-approval
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHUB_TOKEN }}
+
+      - name: Set up kubectl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Authenticate with DigitalOcean Kubernetes
+        run: doctl kubernetes cluster kubeconfig save rkive-docs-dev1-k8s
+
+      - name: Set image version in deployment
+        run: |
+          kubectl set image deployment/secure-uploader-deployment web=${{ secrets.DOCKERHUB_USERNAME }}/file-uploader-app:${VERSION} --namespace default
+
+      - name: Verify rollout status
+        run: |
+          kubectl rollout status deployment/secure-uploader-deployment --namespace default
